@@ -47,7 +47,25 @@ exports.getCandy = async (req, res, next) => {
 };
 
 exports.updateCandy = async (req, res, next) => {
-  console.log(req.body);
-  const userId = req.params.userId;
-    const edit = await Candy.update(req.body,{where:{candyId:userId}})
+  let updateQuantity = null;
+  const candyId = req.params.candyId;
+  const candyData = await Candy.findByPk(candyId);
+  if(candyData){
+    updateQuantity = candyData.quantity - req.body.btnNumber;
+  }else{
+    res.status(402).json({
+      responseMessage: "candyData is not found"
+    })
+  }
+  const updateCandy = await Candy.update({quantity:updateQuantity},{where:{candyId:candyId}});
+  if(updateCandy[0]>0){
+    res.status(201).json({
+      responseMessage: "update successful",
+      updateQuantity:updateQuantity
+    })
+  }else{
+    res.status(401).json({
+      responseMessage:"update unsuccessful"
+    })
+  }
 };

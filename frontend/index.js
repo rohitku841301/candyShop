@@ -34,6 +34,9 @@ async function updateQuantity(event){
         "Content-Type": "application/json",
       },
     })
+    if(totalCandy){
+      parent.querySelector(".quantity").innerText = totalCandy.data.updateQuantity;
+    }
     
 }
 
